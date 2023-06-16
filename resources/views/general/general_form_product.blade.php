@@ -25,4 +25,49 @@
         <button type='submit' class='btn btn-primary w-25 mt-3'>カートへ追加</button>
     </div>
 </form>
+
+<!-- レビュー設置場所 -->
+<h4>レビュー一覧</h4>
+@foreach($review as $reviews)
+<p>
+    <label for='title' class='mt-2'>タイトル:</label>
+    <th scope='col'>{{ $reviews['title']}}</th>
+</p>
+<p>
+    <th scope='col'>{{ $reviews['comment']}}</th>
+</p>
+<p>--------------------------------------</p>
+
+@endforeach
+
+
+
+
+<form action="{{ route('reviews.update',['review' => $result['id']]) }}" method="post" enctype="multipart/form-data">
+    @csrf
+    @method('PATCH')
+
+
+    <label for='title'>タイトル</label>
+    <input type='text' class='form-control' name='title' id='title' value="" />
+
+    <label for='comment'>レビュー</label>
+    <input type='text' class='form-control' name='comment' id='comment' value="" />
+
+
+
+    <div class='row justify-content-center'>
+        <button type='submit' class='btn btn-primary w-25 mt-3'>レビュー投稿</button>
+    </div>
+    <p>※レビュー機能は購入者のみです</p>
+</form>
+
+<p>
+    <a href="{{ route('generals.index') }}">トップページへ戻る</a>
+</p>
+
+
+
+
+
 @endsection

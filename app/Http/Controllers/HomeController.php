@@ -4,6 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Auth;
+
+use App\Product;
+use App\Purchase;
+use App\Review;
+use App\User;
+use Carbon\Carbon;
+
+
 class HomeController extends Controller
 {
     /**
@@ -23,6 +32,11 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $user_id = Auth::user()->id;
+
+
+        return view('home',[
+            'user_id' => $user_id,
+        ]);
     }
 }

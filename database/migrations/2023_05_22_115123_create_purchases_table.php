@@ -19,9 +19,9 @@ class CreatePurchasesTable extends Migration
             $table->integer('user_id');
             $table->integer('product_id');
             $table->tinyInteger('purchase_flg')->default(0);
-            $table->timestamp('purchase_time')->nullable();//nullを許可してる
             $table->string('money','100');
             $table->tinyInteger('quantity')->default(0);
+            $table->timestamps();
 
         });
     }

@@ -9,27 +9,35 @@
 
                 <div class="card-body">
                     @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
+                    <div class="alert alert-success" role="alert">
+                        {{ session('status') }}
+                    </div>
                     @endif
 
                     You are logged in!
                     <p>
-
-                    <a href="{{ route('products.index') }}">商品一覧:管理</a></p>
+                        <a href="{{ route('generals.index') }}">トップ画面</a>
+                    </p>
                     <p>
-
-                    <a href="{{ route('products.create') }}">商品登録</a></p>
                     <p>
+                        <a href="{{ route('userplus.edit',['userplu' =>$user_id]) }}">ユーザー情報編集</a>
+                    </p>
 
-                    <a href="{{ route('generals.index') }}">商品一覧:一般&&非ログイン</a></p>
                     <p>
+                        <a href="{{ route('admins.index') }}">事業者専用画面トップ画面</a>
+                    </p>
 
-                    <a href="{{ route('purchases.index') }}">カート</a>
+
+                    <p>
+                    <form action="{{ route('users.destroy',['user' =>$user_id])}}" method="post" class="float-right">
+                        @csrf
+                        @method('delete')
+                        <input type="submit" value="退会ボタン" class="btn btn-danger" onclick='return confirm("退会しますか？");'>
+                    </form>
+                    </p>
                     
 
-                    </p>
+
                 </div>
             </div>
         </div>

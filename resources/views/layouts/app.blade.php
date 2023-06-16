@@ -10,6 +10,7 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="{{ asset('js/app.js') }}" defer></script>
 
     <!-- Fonts -->
@@ -64,6 +65,13 @@
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         @csrf
                                     </form>
+                                    
+                                    <a class="dropdown-item" href="{{ route('userprofile.index') }}">◆プロフィール</a>
+
+                                    <a class="dropdown-item" href="{{ route('purchases.index') }}">◆カート情報</a>
+
+                                    <a class="dropdown-item" href="{{ route('purchaseplus.index') }}">◆購入履歴</a>
+
                                 </div>
                             </li>
                         @endguest

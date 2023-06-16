@@ -2,9 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
+
+use Illuminate\Support\Facades\DB;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Purchase;
 use App\Product;
+use App\Review;
+use App\User;
+use App\Good;
+
 
 class GeneralController extends Controller
 {
@@ -58,6 +67,10 @@ class GeneralController extends Controller
             // dd($query->toSql());
         // $product = $query->paginate(20);
         $product = $query->where('del_flg', 0)->get();
+
+        // $id = Auth::user->id;
+        // $result = $product->find($id);
+
         // dd($product);
 
         // dd(isset($request));
@@ -71,13 +84,56 @@ class GeneralController extends Controller
         //     //何もない場合の全件表示：
         // $product_all = $product->where('del_flg', 0)->get();
         // }
+
+        $data = [];
+
+        $good_model = new Good;
+
         return view('general/general_read_product', [
             // 'product' => $product_all,
             'product' => $product,
             'search' =>$search,
+            'good_model' => $good_model,
 
         ]);
     }
+
+    public function ajaxgood(Request $request)
+    {
+        
+
+        $id = Auth::user()->id;
+        $product_id = $request->product_id;
+        $good = new Good;
+        // $product = Product::findOrFail($product_id);
+
+        Log::alert($good);
+
+        // 空でない（既にいいねしている）なら
+        if ($good->good_exist($id, $product_id)) {
+            //goodテーブルのレコードを削除
+            $good = Good::where('product_id', $product_id)->where('user_id', $id)->delete();
+        } else {
+            //空（まだ「いいね」していない）ならgoodテーブルに新しいレコードを作成する
+            // $good = new Good;
+            $good->product_id = $request->product_id;
+            $good->user_id = Auth::user()->id;
+            $good->save();
+        
+        }
+
+        //loadCountとすればリレーションの数を○○_countという形で取得できる（今回の場合はいいねの総数）
+        // $productgoodCount = $product->loadCount('good')->good_count;
+
+        //一つの変数にajaxに渡す値をまとめる
+        //今回ぐらい少ない時は別にまとめなくてもいいけど一応。笑
+        $json = [
+            'productgoodCount' => 1,
+        ];
+        //下記の記述でajaxに引数の値を返す
+        return response()->json($json);
+    }
+
 
     /**
      * Show the form for creating a new resource.

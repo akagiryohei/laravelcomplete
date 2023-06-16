@@ -6,6 +6,14 @@ use Illuminate\Http\Request;
 
 use App\Product;
 
+use Illuminate\Support\Facades\Auth;
+use App\Purchase;
+use App\Review;
+use App\User;
+use Carbon\Carbon;
+use App\Good;
+
+
 class ProductController extends Controller
 {
     /**
@@ -13,12 +21,16 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    //事業者専用画面商品リスト
     public function index(Request $request)
     {
 
 
         $product = new Product;
         $product_all = $product->where('del_flg', 0)->get();
+
+
+        
         // dd($product_all);
         return view('products/read_product', [
             'product' => $product_all,
@@ -31,6 +43,22 @@ class ProductController extends Controller
         // ]);
 
     }
+    public function indexgood()
+    {
+        $data = [];
+        // ユーザの投稿の一覧を作成日時の降順で取得
+        //withCount('テーブル名')とすることで、リレーションの数も取得できます。
+        $products = Product::withCount('good')->orderBy('created_at', 'desc')->paginate(10);
+        $good_model = new Good;
+
+        $data = [
+                'products' => $products,
+                'good_model'=>$good_model,
+            ];
+
+        return view('products.index', $data);
+    }
+
 
 
     /**
@@ -51,7 +79,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         $product = new Product;
 
         $columns = ['product_name', 'money', 'explanation'];
@@ -69,14 +97,15 @@ class ProductController extends Controller
 
         //windows環境用
         $original = request()->file('img')->getClientOriginalName();
-        $name = date('Ymd_His').'_'.$original;
+        $name = date('Ymd_His') . '_' . $original;
         request()->file('img')->move('public/', $name);
         $product->img = $name;
 
-        
+
 
         $product->save();
-        return redirect(route('products.index'));
+        // return redirect(route('products.index'));
+        return redirect(route('admins.index'));
     }
 
     /**
@@ -135,7 +164,7 @@ class ProductController extends Controller
         // $record->img = $original;
 
         $original = request()->file('img')->getClientOriginalName();
-        $name = date('Ymd_His').'_'.$original;
+        $name = date('Ymd_His') . '_' . $original;
         request()->file('img')->move('public/', $name);
         $record->img = $name;
 
@@ -147,7 +176,7 @@ class ProductController extends Controller
 
         $record->save();
 
-        return redirect(route('products.index'));
+        return redirect(route('admins.index'));
     }
 
     /**
@@ -164,6 +193,6 @@ class ProductController extends Controller
 
         $product->save();
         //一覧画面に遷移する
-        return redirect(route('products.index'));
+        return redirect(route('admins.index'));
     }
 }

@@ -2,6 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
+
+
+//modelの宣言
+use App\Product;
+use App\Purchase;
+use App\Review;
+use App\User;
+use Carbon\Carbon;
+
+
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -13,7 +24,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        
     }
 
     /**
@@ -34,7 +45,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+            //
     }
 
     /**
@@ -45,7 +56,6 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
     }
 
     /**
@@ -56,7 +66,32 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+
+        $user = new User;
+
+        
+
+        // $userauth = $user->where('id', $id)->get();
+
+        $userauth = $user->all()->toArray();
+        $name="";
+
+        foreach($userauth as $userrecode){
+            if($userrecode['id']==$id){
+                $name=$userrecode['name'];
+                break;
+            }
+        }
+        // dd($name);
+
+
+
+        return view('/purchase/purchase_form',[
+            'user_id'=>$id,
+            'userindex' =>$name,
+
+        ]);
+
     }
 
     /**
@@ -68,7 +103,46 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $user = new User;
+        $day=now();
+        $purchase = new Purchase;
+
+
+
+        $user_id = Auth::user()->id;
+
+        // $purchaselist = $purchase->find()->toArray();
+        // where('purchase_flg',0)
+        $purchaselist = $purchase->where('purchase_flg',0)->get();
+        // $purchase_flgbox=[];
+        foreach($purchaselist as $purchaseitem){
+            // dd($purchaselist[$id-1]);
+            $id=$purchaseitem['id'];
+            // dd($id);
+            $purchasedata = $purchase->find($id);
+            // $purchasetest = $purchase
+            $purchasedata->purchase_flg = $purchaseitem['purchase_flg']=1;
+            $purchasedata->created_at = $purchaseitem['created_at']=Carbon::now();
+            $purchasedata->updated_at = $purchaseitem['updated_at']=Carbon::now();
+
+            
+            // array_push($purchase_flgbox, $purchase_flgitem);
+            $purchasedata->save();
+        }
+
+
+        $userauth = $user->find($user_id);
+        
+        $columns = ['name', 'phone_number', 'postcode','prefecture_id'];
+        foreach ($columns as $column) {
+            $userauth->$column = $request->$column;
+        }
+
+        $userauth->save();
+
+    return view('/purchase/purchase_complete');
+
+
     }
 
     /**
@@ -77,8 +151,19 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        //
+                // $delpurchase = $purchase->find($id);
+        // dd($purchase);
+
+        
+        
+        // dd($useritem);
+        
+        $user->delete();
+        return view('welcome');
+
+        //一覧画面に遷移する
+
     }
 }

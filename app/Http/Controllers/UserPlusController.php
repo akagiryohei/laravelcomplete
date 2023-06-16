@@ -3,23 +3,34 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use Illuminate\Support\Facades\Auth;
 
 
+//modelの宣言
 use App\Product;
 use App\Purchase;
 use App\Review;
+use App\User;
+use Carbon\Carbon;
 
-class ReviewController extends Controller
+
+class UserPlusController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    // 事業者専用画面ユーザーリスト
+    public function index(Request $request)
     {
+        $user =new User;
+        //データがすべて入ってる状況
+        $userauth = $user->all()->toArray();
+        return view('users/user_index', [
+            'user' => $userauth,
+        ]);
+
     }
 
     /**
@@ -62,6 +73,16 @@ class ReviewController extends Controller
      */
     public function edit($id)
     {
+        $user = new User;
+
+
+        $userhuman = $user->find($id);
+
+
+        // dd($userhuman);
+        return view('users/user_edit_form', [
+            'user' =>$userhuman,
+        ]);
     }
 
     /**
@@ -73,37 +94,20 @@ class ReviewController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $review = new Review;
+        $user = new User;
+        $record = $user->find($id);
 
-        $purchase = new Purchase;
+        $columns = ['name', 'email', 'phone_number','postcode','prefecture_id'];
 
-        // $purchase_all =$purchase->all()->toArray();
-
-        //userが購入したもののリスト
-        $purchaseuserlist = $purchase->where('user_id', Auth::user()->id)->where('purchase_flg', 1)->where('product_id', $id)->get();
-
-        //  dd($purchaseuserlist->isEmpty());
-
-
-        if ($purchaseuserlist->isEmpty()==false) {
-
-
-            $columns = ['title', 'comment'];
-            foreach ($columns as $column) {
-                $review->$column = $request->$column;
-            }
-
-            $review->product_id = $id;
-            $review->user_id = Auth::user()->id;
-
-            $review->save();
-
-
-
-            return redirect(route('generals.index',))->with('message','投稿完了');
+        foreach ($columns as $column) {
+            $record->$column = $request->$column;
         }
 
-        return redirect(route('generals.index'))->with('message','購入してください');
+        $record->save();
+
+        return redirect(route('home'));
+
+
     }
 
     /**

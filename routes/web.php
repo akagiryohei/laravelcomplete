@@ -12,6 +12,13 @@ use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GeneralController;
+use App\Http\Controllers\PurchasePluscontroller;
+use App\Http\Controllers\UserPlusController;
+use App\Http\Controllers\AdminPlusController;
+use App\Http\Controllers\UserAdminController;
+use App\Http\Controllers\UserprofileController;
+
+
 
 
 
@@ -31,15 +38,33 @@ Route::get('/', function () {
 });
 
 Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
-
-//productの登録をするためのページへのルート
-
-Route::resource('goods', 'GoodController');
-Route::resource('products', 'ProductController');
-Route::resource('purchases', 'PurchaseController');
-Route::resource('reviews', 'ReviewController');
-Route::resource('users', 'UserController');
 Route::resource('generals', 'GeneralController');
 
+Route::group(['middleware' => 'auth'], function () {
+
+    Route::get('/home', 'HomeController@index')->name('home');
+
+    //productの登録をするためのページへのルート
+
+    
+    
+});
+
+
+Route::group(['middleware' => ['auth', 'can:admin_only']], function () {
+    Route::resource('products', 'ProductController');
+    Route::resource('useradmins', 'UserAdminController');
+    Route::resource('admins', 'AdminPlusController');
+});
+Route::group(['middleware' => ['auth', 'can:general_only']], function () {
+    Route::resource('goods', 'GoodController');
+    Route::resource('purchases', 'PurchaseController');
+    Route::resource('reviews', 'ReviewController');
+    Route::resource('users', 'UserController');
+    Route::resource('purchaseplus', 'PurchasePluscontroller');
+    Route::resource('userplus', 'UserPlusController');
+    Route::get('userprofiles',[UserprofileController::class, 'index'])->name('userprofile.index');
+    Route::post('ajaxgood', 'GeneralController@ajaxgood')->name('products.ajaxgood');
+
+
+});

@@ -4,9 +4,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Auth;
+
+use Illuminate\Support\Facades\DB;
+
+
+
 //modelの宣言
 use App\Product;
 use App\Purchase;
+use App\Review;
+use App\User;
+use App\Good;
+
+
 
 
 class purchaseitem
@@ -21,6 +32,9 @@ class purchaseitem
 
     public $id = 0;
 
+    public $purchase_flg = 0;
+
+
     function init()
     {
         $this->img = '';
@@ -29,6 +43,7 @@ class purchaseitem
         $this->product_id = '';
         $this->quantity = 0;
         $this->id = 0;
+        $this->purchase_flg = 0;
     }
 }
 
@@ -45,6 +60,7 @@ class PurchaseController extends Controller
     {
         $product = new Product;
         $purchase = new Purchase;
+        $user_id = Auth::user()->id;
 
         $product_all = $product->all()->toArray();
         $purchase_all = $purchase->all()->toArray();
@@ -59,19 +75,40 @@ class PurchaseController extends Controller
                     $item->img = $productrecord['img'];
                 }
             }
+            $item->purchase_flg = $purchaserecord['purchase_flg'];
             $item->id = $purchaserecord['id'];
             $item->quantity = $purchaserecord['quantity'];
             $item->product_id = $purchaserecord['product_id'];
             $item->money = $purchaserecord['money'];
             array_push($purchaselist, $item);
         }
+
+        $list = DB::table('products')
+            ->select('products.img', 'products.product_name', 'products.money', 'purchases.purchase_flg', 'purchases.quantity', 'purchases.user_id', 'purchases.created_at', 'purchases.id')
+            ->join('purchases', 'products.id', '=', 'purchases.product_id')
+            ->get();
+
+        $purshasepluslist = $list->where('purchase_flg', 0)->where('user_id', $user_id);
+
         // dd($purchaselist);
 
 
 
 
-        return view('puchase/puchase_read', [
+
+
+        // foreach($purchaselist as $purchaseitem){
+        //     dd($purchaseitem);
+
+        // }
+
+
+
+
+        return view('purchase/purchase_read', [
             'purchaselist' => $purchaselist,
+            'user_id' => $user_id,
+            'purshasepluslist' => $purshasepluslist,
         ]);
     }
 
@@ -82,7 +119,7 @@ class PurchaseController extends Controller
      */
     public function create()
     {
-        //
+        return view('/products/insert_product');
     }
 
     /**
@@ -119,12 +156,27 @@ class PurchaseController extends Controller
 
         $result = $product->find($id);
 
+        $review = new Review;
+
+
+        $reviewlist = $review->where('product_id', $id)->get();
+
+        // dd($reviewlist);
+        $data = [];
+        // ユーザの投稿の一覧を作成日時の降順で取得
+        //withCount('テーブル名')とすることで、リレーションの数も取得できます。
+        $good_model = new Good;
+
         return view('/general/general_form_product', [
 
             'result' => $result,
+            'review' => $reviewlist,
+            'good_model' => $good_model,
 
         ]);
     }
+
+
 
     /**
      * Update the specified resource in storage.
@@ -137,15 +189,14 @@ class PurchaseController extends Controller
     {
         $product = new Product;
         $purchase = new Purchase;
+        $user = new User;
 
-        
+        $purchasedata = $purchase->find($id);
+
         if (isset($request->plus)) {
-            
-            $purchasedata=$purchase->find($id);
-            
 
-            $quantitydata=$purchasedata->quantity;
-            
+            $quantitydata = $purchasedata->quantity;
+
             $purchasedata->quantity = $quantitydata + 1;
 
 
@@ -154,26 +205,20 @@ class PurchaseController extends Controller
             return redirect(route('purchases.index'));
         }
 
-        if (isset($request->minus)) {
-            
-            $purchasedata=$purchase->find($id);
-            
+        if (isset($request->minus) && $purchasedata->quantity > 1) {
 
-            $quantitydata=$purchasedata->quantity;
-            
+            // dd($purchasedata->quantity);
+
+
+            $quantitydata = $purchasedata->quantity;
+
             $purchasedata->quantity = $quantitydata - 1;
 
 
             $purchasedata->save();
 
             return redirect(route('purchases.index'));
-
-
-
-
         }
-
-
 
         //カートへ登録するときの内容
         if (isset($request->quantity)) {
@@ -183,7 +228,7 @@ class PurchaseController extends Controller
             $productdata = $product->find($id);
 
             //user_idはとりあえず手動
-            $purchase->user_id = 1;
+            $purchase->user_id = Auth::user()->id;
             $purchase->product_id = $id;
             $purchase->purchase_flg = 0;
             $purchase->money = $productdata->money;
@@ -193,6 +238,8 @@ class PurchaseController extends Controller
             $purchase->save();
             return redirect(route('generals.index'));
         }
+
+        return redirect(route('purchases.index'));
     }
 
     /**
@@ -205,6 +252,7 @@ class PurchaseController extends Controller
     {
         // $delpurchase = $purchase->find($id);
         // dd($purchase);
+
 
         $purchase->delete();
 

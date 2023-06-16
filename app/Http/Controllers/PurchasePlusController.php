@@ -6,12 +6,17 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Support\Facades\DB;
 
+
+//modelの宣言
 use App\Product;
 use App\Purchase;
 use App\Review;
+use App\User;
 
-class ReviewController extends Controller
+
+class PurchasePlusController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,6 +25,35 @@ class ReviewController extends Controller
      */
     public function index()
     {
+        $product = new Product;
+        $purchase = new Purchase;
+        $user_id = Auth::user()->id;
+        $purchaseall = $purchase->all()->toArray();
+        $purchaselist = $purchase->where('purchase_flg',1)->where('user_id',$user_id)->get();
+
+        
+        $list = DB::table('products')
+        ->select('products.img','products.product_name','products.money','purchases.purchase_flg','purchases.quantity','purchases.user_id','purchases.created_at')
+        ->join('purchases','products.id','=','purchases.product_id')
+        ->get();
+
+        $purshasepluslist=$list->where('purchase_flg',1)->where('user_id',$user_id);
+
+        
+        // dd($purshasepluslist);
+        // //製品名の表示をするために行動--------------------
+        // $product_id_list=[];
+        // foreach($purchaselist as $purchaseitem){
+        //     $product_id = $purchaseitem->product_id;
+        //     array_push($product_id_list,$product_id);
+        // }
+        // // dd($product_id_list);
+        // $product_id_list;
+        // //---------------------------------------------
+        return view('purchase/purchase_purchase', [
+            'purshasepluslist' => $purshasepluslist,
+        ]);
+
     }
 
     /**
@@ -62,6 +96,7 @@ class ReviewController extends Controller
      */
     public function edit($id)
     {
+        //
     }
 
     /**
@@ -73,37 +108,7 @@ class ReviewController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $review = new Review;
-
-        $purchase = new Purchase;
-
-        // $purchase_all =$purchase->all()->toArray();
-
-        //userが購入したもののリスト
-        $purchaseuserlist = $purchase->where('user_id', Auth::user()->id)->where('purchase_flg', 1)->where('product_id', $id)->get();
-
-        //  dd($purchaseuserlist->isEmpty());
-
-
-        if ($purchaseuserlist->isEmpty()==false) {
-
-
-            $columns = ['title', 'comment'];
-            foreach ($columns as $column) {
-                $review->$column = $request->$column;
-            }
-
-            $review->product_id = $id;
-            $review->user_id = Auth::user()->id;
-
-            $review->save();
-
-
-
-            return redirect(route('generals.index',))->with('message','投稿完了');
-        }
-
-        return redirect(route('generals.index'))->with('message','購入してください');
+        //
     }
 
     /**
