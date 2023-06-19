@@ -20,10 +20,6 @@
                     </p>
                     <p>
                     <p>
-                        <a href="{{ route('userplus.edit',['userplu' =>$user_id]) }}">ユーザー情報編集</a>
-                    </p>
-
-                    <p>
                         <a href="{{ route('admins.index') }}">事業者専用画面トップ画面</a>
                     </p>
 

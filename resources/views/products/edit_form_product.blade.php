@@ -1,6 +1,18 @@
 @extends('layouts.app')
 @section('content')
 
+<!-- エラーメッセージ表示 -->
+<div class='panel-body'>
+    @if($errors->any())
+    <div class='alert alert-danger'>
+        <ul>
+            @foreach($errors->all() as $message)
+            <li>{{ $message }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+</div>
 
 <form action="{{ route('products.update',['product' => $result['id']]) }}" method="post" enctype="multipart/form-data">
     @csrf

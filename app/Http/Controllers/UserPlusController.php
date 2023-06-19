@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
+use App\Http\Requests\CreateUserUpdate;
 
 //modelの宣言
 use App\Product;
@@ -92,7 +94,7 @@ class UserPlusController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CreateUserUpdate $request, $id)
     {
         $user = new User;
         $record = $user->find($id);
@@ -104,6 +106,9 @@ class UserPlusController extends Controller
         }
 
         $record->save();
+
+
+        
 
         return redirect(route('home'));
 

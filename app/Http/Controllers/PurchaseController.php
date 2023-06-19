@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\DB;
 
+use App\Http\Requests\CreatePurchase;
+
+
 
 
 //modelの宣言
@@ -221,23 +224,6 @@ class PurchaseController extends Controller
         }
 
         //カートへ登録するときの内容
-        if (isset($request->quantity)) {
-
-
-            // 今のIDに合致するデータを取得
-            $productdata = $product->find($id);
-
-            //user_idはとりあえず手動
-            $purchase->user_id = Auth::user()->id;
-            $purchase->product_id = $id;
-            $purchase->purchase_flg = 0;
-            $purchase->money = $productdata->money;
-            $purchase->quantity = $request->quantity;
-
-
-            $purchase->save();
-            return redirect(route('generals.index'));
-        }
 
         return redirect(route('purchases.index'));
     }

@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
 
+use App\Http\Requests\CreateReview;
+
+
 
 use App\Product;
 use App\Purchase;
@@ -71,7 +74,7 @@ class ReviewController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CreateReview $request, $id)
     {
         $review = new Review;
 

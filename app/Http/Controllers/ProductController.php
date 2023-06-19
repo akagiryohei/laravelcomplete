@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Http\Requests\CreateProduct;
+
+
 use App\Product;
 
 use Illuminate\Support\Facades\Auth;
@@ -77,7 +80,7 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateProduct $request)
     {
 
         $product = new Product;
@@ -148,7 +151,7 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CreateProduct $request, $id)
     {
         $instance = new Product;
         $record = $instance->find($id);
@@ -186,13 +189,28 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
     // public function destroy($id)
-    public function destroy(Product $product)
+    public function destroy(Request $request,$id)
 
     {
-        $product['del_flg'] = 1;
 
+        $product= new Product;
+        $productdate=$product->find($id);
+
+        if (isset($request->destroy)) {
+
+            $product['del_flg'] = 1;
+            $product->save();
+            return redirect(route('admins.index'));
+            
+        }
+        
+        if(isset($request->resurrection))
+        
+        $product['del_flg'] = 0;
         $product->save();
         //一覧画面に遷移する
         return redirect(route('admins.index'));
+
+        
     }
 }

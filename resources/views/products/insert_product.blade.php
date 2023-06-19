@@ -1,6 +1,19 @@
 @extends('layouts.app')
 @section('content')
 
+<!-- エラーメッセージ表示 -->
+<div class='panel-body'>
+    @if($errors->any())
+    <div class='alert alert-danger'>
+        <ul>
+            @foreach($errors->all() as $message)
+            <li>{{ $message }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+</div>
+
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -24,10 +37,9 @@
                     </div>
                 </form>
             </div>
-            <p>
-                <a href="{{ route('admins.index') }}" >事業者専用画面トップ画面へ戻る</a>
-            </p>
-            
+            <button type="button" class="btn btn-success">
+                <a href="{{ route('home') }}" class="link-light">事業者専用画面トップ画面</a>
+            </button>
 
         </div>
     </div>
