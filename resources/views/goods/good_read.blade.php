@@ -3,32 +3,33 @@
 
 
 
+<div class="d-flex justify-content-center">
+    <h4>★いいね一覧★</h4>
+</div>
+
+<div class="d-flex flex-row-reverse bd-highlight">
+    <div class="p-2 bd-highlight">
+        <button type="button" class="btn btn-success">
+            <a href="{{ route('userprofile.index') }}" class="link-light">お客様情報に戻る</a>
+        </button>
+    </div>
+</div>
+
 
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">いいね一覧</div>
-                <div class="card-body">
-                    <table class='table'>
-                        <tbody>
-                            @foreach($good as $gooditem)
-                            <tr>
-                                <th><img src="{{ asset('public/'.$gooditem->img) }}" alt="代替テキスト" widht="5%"><th>
-                                <th scope='col'>{{ $gooditem->product_name}}</th>
-                                <th scope='col'>{{ $gooditem->money}}</th>
-                            </tr>
-                            @endforeach
+    <div class="d-flex justify-content-center flex-sm-wrap">
+        @foreach($good as $gooditem)
 
-                        </tbody>
-                    </table>
-                    <p>
-                        <a href="{{ route('userprofile.index') }}">お客様情報に戻る</a>
-                    </p>
-
-                </div>
+        <div class="card" style="width: 18rem;">
+            <img src="{{ asset('public/'.$gooditem->img) }}" class="card-img-top" alt="代替テキスト">
+            <div class="card-body">
+                <h5 class="card-title">{{ $gooditem->product_name}}</h5>
+                <p class="card-text">{{ $gooditem->money}}円</p>
             </div>
         </div>
+
+        @endforeach
+
     </div>
 </div>
 

@@ -30,7 +30,7 @@ class ProductController extends Controller
 
 
         $product = new Product;
-        $product_all = $product->where('del_flg', 0)->get();
+        $product_all = $product->get();
 
 
         
@@ -151,7 +151,7 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CreateProduct $request, $id)
+    public function update(Request $request, $id)
     {
         $instance = new Product;
         $record = $instance->find($id);
@@ -166,10 +166,20 @@ class ProductController extends Controller
         // request()->file('img')->storeAs('', $original, 'public');
         // $record->img = $original;
 
-        $original = request()->file('img')->getClientOriginalName();
-        $name = date('Ymd_His') . '_' . $original;
-        request()->file('img')->move('public/', $name);
-        $record->img = $name;
+        // $originalimg = request()->file('img');
+        
+        if(isset($request->img)){
+
+            // dd($originalimg);
+            
+            
+            
+            
+            $original = request()->file('img')->getClientOriginalName();
+            $name = date('Ymd_His') . '_' . $original;
+            request()->file('img')->move('public/', $name);
+            $record->img = $name;
+        }
 
 
 
@@ -198,16 +208,16 @@ class ProductController extends Controller
 
         if (isset($request->destroy)) {
 
-            $product['del_flg'] = 1;
-            $product->save();
+            $productdate['del_flg'] = 1;
+            $productdate->save();
             return redirect(route('admins.index'));
             
         }
         
         if(isset($request->resurrection))
         
-        $product['del_flg'] = 0;
-        $product->save();
+        $productdate['del_flg'] = 0;
+        $productdate->save();
         //一覧画面に遷移する
         return redirect(route('admins.index'));
 

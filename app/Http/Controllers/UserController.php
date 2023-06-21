@@ -5,7 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\CreatePurchase;
-use App\Http\Requests\CreateUser;
+use App\Http\Requests\CreateUserUpdate;
+use App\Http\Requests\CreateUserPrechase;
+
+
+
+
 //modelの宣言
 use App\Product;
 use App\Purchase;
@@ -79,12 +84,15 @@ class UserController extends Controller
         foreach ($userauth as $userrecode) {
             if ($userrecode['id'] == $id) {
                 $name = $userrecode['name'];
-                break;
+                
             }
         }
         // dd($name);
 
         $user_id = Auth::user()->id;
+        $userhuman = Auth::user()->toArray();
+
+        // dd($userhuman);
 
         $list = DB::table('products')
             ->select('products.img', 'products.product_name', 'products.money', 'purchases.purchase_flg', 'purchases.quantity', 'purchases.user_id', 'purchases.created_at', 'purchases.id')
@@ -100,6 +108,7 @@ class UserController extends Controller
                 return view('/purchase/purchase_form', [
                     'user_id' => $id,
                     'userindex' => $name,
+                    'userhuman' => $userhuman,
                 ]);
             }
         }
@@ -117,7 +126,7 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CreateUser $request, $id)
+    public function update(CreateUserPrechase $request, $id)
     {
         $user = new User;
         $day = now();
@@ -175,7 +184,7 @@ class UserController extends Controller
         // dd($useritem);
 
         $user->delete();
-        return view('welcome');
+        return view('/auth/login');
 
         //一覧画面に遷移する
 

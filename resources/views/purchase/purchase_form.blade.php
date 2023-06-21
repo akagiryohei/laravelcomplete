@@ -28,28 +28,28 @@
                         <div class="form-group row">
                             <label for="name" class="col-md-4 col-form-label text-md-right">氏名</label>
                             <div class="col-md-6">
-                                <input id="name" type="text" class="form-control" name="name" value="" autofocus>
+                                <input id="name" type="text" class="form-control" name="name" value="{{ $userhuman['name']}}" autofocus>
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <label for="phone_number" class="col-md-4 col-form-label text-md-right">電話番号</label>
                             <div class="col-md-6">
-                                <input id="phone_number" type="text" class="form-control" name="phone_number" value="" autofocus>
+                                <input id="phone_number" type="text" class="form-control" name="phone_number" value="{{ $userhuman['phone_number']}}" autofocus>
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <label for="postcode" class="col-md-4 col-form-label text-md-right">郵便番号</label>
                             <div class="col-md-6">
-                                <input id="postcode" type="text" class="form-control" name="postcode" value="" autofocus>
+                                <input id="postcode" type="text" class="form-control" name="postcode" value="{{ $userhuman['postcode']}}" autofocus>
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <label for="prefecture_id" class="col-md-4 col-form-label text-md-right">住所</label>
                             <div class="col-md-6">
-                                <input id="prefecture_id" type="text" class="form-control" name="prefecture_id" value="" autofocus>
+                                <input id="prefecture_id" type="text" class="form-control" name="prefecture_id" value="{{ $userhuman['prefecture_id']}}" autofocus>
                             </div>
                         </div>
 

@@ -23,21 +23,27 @@
                 <h5 class="card-title">{{ $products['product_name']}}</h5>
                 <p class="card-text">{{ $products['money']}}円</p>
 
+
+
+                @if($products['del_flg']==0)
                 <p class="card-text">
                 <form action="{{ route('products.destroy',$products->id)}}" method="post" class="float-right">
                     @csrf
                     @method('delete')
-                    <input type="submit" value="非表示" class="btn btn-danger" name="destroy" onclick='return confirm("削除しますか？");'>
+                    <input type="submit" value="非表示" class="btn btn-danger" name="destroy" onclick='return confirm("非表示にしますか？");'>
                 </form>
                 </p>
                 <p class="card-text">
 
+                @elseif($products['del_flg']==1)
                 <form action="{{ route('products.destroy',$products->id)}}" method="post" class="float-right">
                     @csrf
                     @method('delete')
                     <input type="submit" value="表示" class="btn btn-success" name="resurrection">
                 </form>
                 </p>
+
+                @endif
                 <p class="card-text">
                     <button type="button" class="btn btn-primary ">
                         <a href="{{ route('products.edit',['product' =>$products['id']]) }}" class="link-light">商品編集</a>

@@ -25,7 +25,7 @@
     <p>現在のデータ</p>
     <img src="{{ asset('public/'.$result->img) }}" alt="代替テキスト" widht="5%">
 
-    <input type="file" class='form-control' name="img" id='img' value="{{ $result['img']}}"><!--仮画像リンク-->
+    <input type="file" class='form-control' name="img" id='img' value=""><!--仮画像リンク-->
 
     <label for='explanation' class='mt-2'>商品説明文</label>
     <textarea class='form-control' name='explanation'>{{ $result['explanation']}}</textarea>
