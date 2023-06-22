@@ -24,7 +24,7 @@ class CreatePurchase extends FormRequest
     public function rules()
     {
         return [
-            'quantity'=>'required|Integer',
+            'quantity'=>'required|Integer|max:127|min:1',
 
         ];
     }

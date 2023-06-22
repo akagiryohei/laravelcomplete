@@ -4,7 +4,7 @@
 <div class="container">
 
     <div class="p-3 mb-2 bg-primary text-white rounded-start">
-        <h2>非ログイン者トップ画面</h2>
+        <h2>健康の森</h2>
     </div>
 
 

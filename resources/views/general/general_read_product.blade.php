@@ -4,7 +4,7 @@
 <div class="container">
 
     <div class="p-3 mb-2 bg-success  text-white rounded-start">
-        <h2>ログイン者向けページ</h2>
+        <h2>健康の森</h2>
     </div>
 
     <!-- 検索する条件をgetで送信する -->

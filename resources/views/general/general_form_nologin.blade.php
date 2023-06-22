@@ -1,23 +1,23 @@
 @extends('layouts.app')
 @section('content')
 
-<div class='row justify-content-center'>
 
-    <div class="card mb-3" style="max-width: 50%;">
-        <div class="row justify-content-between">
-            <div class="col-md-4">
-                <img src="{{ asset('public/'.$result->img) }}" alt="代替テキスト">
-            </div>
-            <div class="col-md-5">
-                <div class="card-body">
-                    <h4 class="card-title">{{ $result['product_name']}}</h4>
-                    <p class="card-text">{{ $result['explanation']}}</p>
-                    <p class="card-text"><small class="text-muted">{{ $result['money']}}円</small></p>
-                </div>
+<div class="container">
+    <div class="d-flex justify-content-center flex-sm-wrap">
+
+        <div class="card" style="width: 18rem;">
+            <img src="{{ asset('public/'.$result->img) }}" class="card-img-top" alt="代替テキスト">
+            <div class="card-body">
+                <h5 class="card-title">{{ $result['product_name']}}</h5>
+                <p class="card-text">{{ $result['explanation']}}</p>
+                <p class="card-text">{{ $result['money']}}円</p>
             </div>
         </div>
+
+
     </div>
 </div>
+
 
 
 
